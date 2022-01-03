@@ -149,6 +149,7 @@ class IndexPickerCLI(cli.Application):
                                 flush=True,
                             )
                             previous_returns = current_returns
+        print(f"Final cost: {current_returns}")
 
 
 if __name__ == "__main__":

@@ -115,6 +115,50 @@ tables = {
     ],
 }
 
+tables = {
+    "warehouse": [
+        "w_id",
+    ],
+    "item": [
+        "i_id",
+    ],
+    "stock": [
+        "s_w_id",
+        "s_i_id",
+        "s_quantity",
+    ],
+    "district": [
+        "d_w_id",
+        "d_id",
+    ],
+    "customer": [
+        "c_w_id",
+        "c_d_id",
+        "c_id",
+        "c_last",
+        "c_first",
+    ],
+    # "history": [
+    # ],
+    "oorder": [
+        "o_w_id",
+        "o_d_id",
+        "o_id",
+        "o_c_id",
+    ],
+    "new_order": [
+        "no_w_id",
+        "no_d_id",
+        "no_o_id",
+    ],
+    "order_line": [
+        "ol_w_id",
+        "ol_d_id",
+        "ol_o_id",
+        "ol_i_id",
+    ],
+}
+
 
 class GenerateCreateIndexTPCC(cli.Application):
     min_num_cols = cli.SwitchAttr("--min-num-cols", int, mandatory=True)
@@ -137,11 +181,15 @@ class GenerateCreateIndexTPCC(cli.Application):
                     cols = ",".join(permutation)
                     cols_name = "_".join(permutation) + "_key"
                     index_name = f"action_{table}_{cols_name}"
-                    sql = (
-                        f"create index if not exists "
-                        f"{index_name} on {table} ({cols});"
-                    )
-                    print(sql, file=f)
+                    methods = "btree,brin".split(",")
+                    for method in methods:
+                        sql = (
+                            f"create index if not exists "
+                            f"{index_name} on {table} "
+                            f"using {method} "
+                            f"({cols});"
+                        )
+                        print(sql, file=f)
 
 
 if __name__ == "__main__":

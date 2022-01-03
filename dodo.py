@@ -73,7 +73,7 @@ def task_forecast():
             "python3 ./forecast/clusterer.py --preprocessor-hdf ./artifacts/preprocessor.hdf --output-csv ./artifacts/forecast.csv",
         ],
         "targets": ["./artifacts/preprocessor.hdf", "./artifacts/forecast.csv"],
-        "uptodate": [False],  # TODO(WAN): Always recompute?
+        "uptodate": [True],  # TODO(WAN): Always recompute?
         "verbosity": VERBOSITY_DEFAULT,
     }
 
