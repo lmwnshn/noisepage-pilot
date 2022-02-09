@@ -7,7 +7,7 @@ sudo --validate
 ulimit -n 8096
 
 # Clean up the result of previous runs, if any.
-doit ci_clean_slate
+#doit ci_clean_slate
 sudo pkill postgres || true
 doit behavior_microservice_kill
 
@@ -17,27 +17,27 @@ doit behavior_microservice_kill
 # in that it opaquely wraps the data generation pipeline.
 # This prevents it from composing with new dodo tasks.
 # It's not a big deal; probably not worth refactoring right now.
-doit behavior_datagen
-doit behavior_train
+#doit behavior_datagen
+#doit behavior_train
 
 # Forecast: generate training data.
 # This is annoying to automate because we need to enable/disable
 # logging and also customize the workload we want, so we don't.
-doit noisepage_init
-doit benchbase_overwrite_config
-doit benchbase_bootstrap_dbms
-doit benchbase_run --benchmark="tpcc" --args="--create=true --load=true"
-doit noisepage_enable_logging
-doit benchbase_run --benchmark="tpcc" --args="--execute=true"
-doit noisepage_disable_logging
+#doit noisepage_init
+#doit benchbase_overwrite_config
+#doit benchbase_bootstrap_dbms
+#doit benchbase_run --benchmark="tpcc" --args="--create=true --load=true"
+#doit noisepage_enable_logging
+#doit benchbase_run --benchmark="tpcc" --args="--execute=true"
+#doit noisepage_disable_logging
 
 # Because BenchBase scales down the workload, we would end up predicting nothing by default.
 # We hack around it by deleting the last few query log files.
-doit noisepage_truncate_log
+#doit noisepage_truncate_log
 
 # Predict the forecast manually because we need to control the time for now.
 # Otherwise it would default to predicting [now, now+1 minute].
-doit forecast_predict
+#doit forecast_predict
 
 ##############################################################################
 # After this line, both forecast and behavior models should be ready.
@@ -48,6 +48,13 @@ doit behavior_microservice
 
 # Start with a fresh copy of NoisePage.
 doit noisepage_init
+
+# Install Hutch manually for now.
+cd build/noisepage/cmudb/extensions/hutch/
+sudo python3 tscout_feature_gen.py
+PG_CONFIG=../../../../../artifacts/noisepage/pg_config make clean -j
+PG_CONFIG=../../../../../artifacts/noisepage/pg_config make install -j
+cd -
 
 # Install HypoPG.
 doit action_selection_hypopg_install
@@ -72,6 +79,6 @@ PGPASSWORD=np_as_spiel_pass ./artifacts/noisepage/psql -h localhost -d np_as_spi
 doit action_generation --args="--min-num-cols 1 --max-num-cols 4 --filter-tables"
 
 # Start picking indexes.
-doit action_recommendation --database_game_args="--use_microservice"
+doit action_recommendation --database_game_args="--use_microservice --record_predictions"
 
 sudo --reset-timestamp

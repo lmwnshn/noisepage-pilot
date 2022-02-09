@@ -102,19 +102,27 @@ struct ExplainMicroserviceCost {
   explicit ExplainMicroserviceCost(httplib::Client *client, pqxx::result *rset, bool record_predictions) {
     for (const auto &r : *rset) {
       for (const auto &f : r) {
-        // Parse the JSON result from EXPLAIN (FORMAT JSON).
+        // Parse the JSON result from EXPLAIN (FORMAT TSCOUT).
         std::string json_str{pqxx::to_string(f)};
         rapidjson::Document doc;
         doc.Parse(json_str.c_str());
 
+        if (doc.GetArray().Size() != 2) {
+          std::cout << json_str << std::endl;
+        }
+
         // Augment the JSON tree by computing additional properties, e.g., differencing.
-        for (auto &plan_node : doc.GetArray()) {
+        // for (auto &plan_node : doc.GetArray()) {
+        {
+          auto &plan_node = doc.GetArray()[1];
           rapidjson::Document::Object &&plan_obj = plan_node["Plan"].GetObject();
           Augment(doc, plan_obj);
         }
 
         // Accumulate the cost of each JSON node into model_cost_.
-        for (auto &plan_node : doc.GetArray()) {
+        // for (auto &plan_node : doc.GetArray()) {
+        {
+          auto &plan_node = doc.GetArray()[1];
           rapidjson::Document::Object &&plan_obj = plan_node["Plan"].GetObject();
           Cost(client, plan_obj, record_predictions);
         }
@@ -531,6 +539,9 @@ std::vector<double> DatabaseState::Returns() const {
   pqxx::connection conn(db_conn_string);
   pqxx::work txn(conn);
 
+  // TODO(WAN): flag
+  // txn.exec("LOAD 'hutch_extension';");
+
   // If HypoPG is enabled, reset HypoPG state.
   if (use_hypopg) {
     // hypopg_reset() removes all hypothetical indexes.
@@ -572,7 +583,7 @@ std::vector<double> DatabaseState::Returns() const {
           ExplainCost cost{&rset};
           total_cost += cost.total_cost_ * work.num_arrivals_;
         } else if (use_hypopg && use_microservice) {
-          query = absl::StrCat("EXPLAIN (FORMAT JSON) ", query);
+          query = absl::StrCat("EXPLAIN (FORMAT TSCOUT) ", query);
           pqxx::result rset{txn.exec(query)};
           ExplainMicroserviceCost cost{client, &rset, record_predictions};
           total_cost += cost.model_cost_ * work.num_arrivals_;

@@ -115,6 +115,7 @@ def task_noisepage_init():
             lambda: os.chdir(ARTIFACTS_PATH),
             f"rm -rf {DEFAULT_PGDATA}",
             f"./initdb {DEFAULT_PGDATA}",
+            "echo \"shared_preload_libraries = 'hutch_extension'\" >> ./pgdata/postgresql.conf",
             run_noisepage_detached,
             "until ./pg_isready ; do sleep 1 ; done",
             f"./createdb {DEFAULT_DB}",
