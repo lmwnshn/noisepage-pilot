@@ -161,6 +161,8 @@ class Preprocessor:
                 "command_tag",
                 "message",
                 "detail",
+                "virtual_transaction_id",
+                "transaction_id",
             ],
             header=None,
             index_col=False,
@@ -374,7 +376,13 @@ class Preprocessor:
         clock("Parse query")
 
         # Only keep the relevant columns to optimize for storage, unless otherwise specified.
-        stored_columns = ["log_time", "query_template", "query_params"]
+        stored_columns = [
+            "log_time",
+            "query_template",
+            "query_params",
+            "virtual_transaction_id",
+            "transaction_id",
+        ]
         if store_query_subst:
             stored_columns.append("query_subst")
         return df[stored_columns]
@@ -423,7 +431,6 @@ class Preprocessor:
 
 
 class PreprocessorCLI(cli.Application):
-
     # The columns that constitute a CSVLOG file, as defined by PostgreSQL.
     # See: https://www.postgresql.org/docs/14/runtime-config-logging.html
     _PG_LOG_COLUMNS: List[str] = [
