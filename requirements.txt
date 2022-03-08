@@ -1,11 +1,14 @@
 black
 doit
 xlrd
+cython
 featurewiz==0.1.0
 flake8
 flask
+graphviz
 isort
 lightgbm
+niet
 numpy>=1.20 # numpy.typing.
 pandarallel # Forecast. Parallelize pandas computations.
 pandas
@@ -19,6 +22,7 @@ pylint
 pyyaml
 scikit-learn>=1.0.0 # Behavior models.
 setproctitle
+setuptools
 torch # Forecast. LSTM.
 toml
 tqdm
