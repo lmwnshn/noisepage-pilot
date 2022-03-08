@@ -2,9 +2,9 @@ from plumbum import cmd
 
 from dodos import VERBOSITY_DEFAULT
 
-DEFAULT_DB = "project1db"
-DEFAULT_USER = "project1user"
-DEFAULT_PASS = "project1pass"
+DEFAULT_DB = "benchbase"
+DEFAULT_USER = "benchbaseuser"
+DEFAULT_PASS = "benchbasepass"
 
 # Note that pgreplay requires the following configuration:
 #

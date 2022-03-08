@@ -5,8 +5,8 @@
     <type>POSTGRES</type>
     <driver>org.postgresql.Driver</driver>
     <url>jdbc:postgresql://localhost:5432/benchbase?preferQueryMode=extended</url>
-    <username>admin</username>
-    <password>password</password>
+    <username>benchbaseuser</username>
+    <password>benchbasepass</password>
     <isolation>TRANSACTION_READ_COMMITTED</isolation>
     <batchsize>128</batchsize>
 
@@ -17,7 +17,7 @@
     <terminals>1</terminals>
     <works>
         <work>
-            <time>60</time>
+            <time>300</time>
             <rate>10000</rate>
             <weights>45,43,4,4,4</weights>
         </work>

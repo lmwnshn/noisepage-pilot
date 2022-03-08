@@ -157,6 +157,7 @@ class Preprocessor:
             parse_dates=["log_time", "session_start_time"],
             usecols=[
                 "log_time",
+                "session_line_num",
                 "session_start_time",
                 "command_tag",
                 "message",
@@ -202,8 +203,8 @@ class Preprocessor:
         query : pd.Series
             A str-typed series containing the queries from the log.
         """
-        simple = r"statement: ((?:DELETE|INSERT|SELECT|UPDATE).*)"
-        extended = r"execute .+: ((?:DELETE|INSERT|SELECT|UPDATE).*)"
+        simple = r"statement: ((?:DELETE|INSERT|SELECT|UPDATE|BEGIN|COMMIT|ROLLBACK).*)"
+        extended = r"execute .+: ((?:DELETE|INSERT|SELECT|UPDATE|BEGIN|COMMIT|ROLLBACK).*)"
         regex = f"(?:{simple})|(?:{extended})"
         query = message_series.str.extract(regex, flags=re.IGNORECASE)
         # Combine the capture groups for simple and extended query protocol.
@@ -380,6 +381,7 @@ class Preprocessor:
             "log_time",
             "query_template",
             "query_params",
+            "session_line_num",
             "virtual_transaction_id",
             "transaction_id",
         ]

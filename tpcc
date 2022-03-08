@@ -1,0 +1,638 @@
+digraph tpcc {
+	BEGIN
+	COMMIT
+	"SELECT * FROM pg_stat_da
+tabase"
+	"SELECT * FROM pg_stat_da
+tabase_conflicts"
+	"SELECT * FROM pg_stat_us
+er_indexes"
+	"SELECT * FROM pg_stat_us
+er_tables"
+	"SELECT * FROM pg_statio_
+user_indexes"
+	"SELECT * FROM pg_statio_
+user_tables"
+	"SELECT COUNT(DISTINCT (S
+_I_ID)) AS STOCK_COUNT F
+ROM order_line, stock WH
+ERE OL_W_ID = $1 AND OL_
+D_ID = $2 AND OL_O_ID < 
+$3 AND OL_O_ID >= $4 AND
+ S_W_ID = $5 AND S_I_ID 
+= OL_I_ID AND S_QUANTITY
+ < $6"
+	"SELECT C_DATA FROM custo
+mer WHERE C_W_ID = $1 AN
+D C_D_ID = $2 AND C_ID =
+ $3"
+	"SELECT C_DISCOUNT, C_LAS
+T, C_CREDIT FROM custome
+r WHERE C_W_ID = $1 AND 
+C_D_ID = $2 AND C_ID = $
+3"
+	"SELECT C_FIRST, C_MIDDLE
+, C_ID, C_STREET_1, C_ST
+REET_2, C_CITY, C_STATE,
+ C_ZIP, C_PHONE, C_CREDI
+T, C_CREDIT_LIM, C_DISCO
+UNT, C_BALANCE, C_YTD_PA
+YMENT, C_PAYMENT_CNT, C_
+SINCE FROM customer WHER
+E C_W_ID = $1 AND C_D_ID
+ = $2 AND C_LAST = $3 OR
+DER BY C_FIRST"
+	"DELETE FROM new_order WH
+ERE NO_O_ID = $1 AND NO_
+D_ID = $2 AND NO_W_ID = 
+$3"
+	"SELECT C_FIRST, C_MIDDLE
+, C_LAST, C_STREET_1, C_
+STREET_2, C_CITY, C_STAT
+E, C_ZIP, C_PHONE, C_CRE
+DIT, C_CREDIT_LIM, C_DIS
+COUNT, C_BALANCE, C_YTD_
+PAYMENT, C_PAYMENT_CNT, 
+C_SINCE FROM customer WH
+ERE C_W_ID = $1 AND C_D_
+ID = $2 AND C_ID = $3"
+	"SELECT D_NEXT_O_ID FROM 
+district WHERE D_W_ID = 
+$1 AND D_ID = $2"
+	"SELECT D_NEXT_O_ID, D_TA
+X FROM district WHERE D_
+W_ID = $1 AND D_ID = $2 
+FOR UPDATE"
+	"SELECT D_STREET_1, D_STR
+EET_2, D_CITY, D_STATE, 
+D_ZIP, D_NAME FROM distr
+ict WHERE D_W_ID = $1 AN
+D D_ID = $2"
+	"SELECT I_PRICE, I_NAME ,
+ I_DATA FROM item WHERE 
+I_ID = $1"
+	"SELECT NO_O_ID FROM new_
+order WHERE NO_D_ID = $1
+ AND NO_W_ID = $2 ORDER 
+BY NO_O_ID ASC LIMIT $3"
+	"SELECT OL_I_ID, OL_SUPPL
+Y_W_ID, OL_QUANTITY, OL_
+AMOUNT, OL_DELIVERY_D FR
+OM order_line WHERE OL_O
+_ID = $1 AND OL_D_ID = $
+2 AND OL_W_ID = $3"
+	"SELECT O_C_ID FROM oorde
+r WHERE O_ID = $1 AND O_
+D_ID = $2 AND O_W_ID = $
+3"
+	"SELECT O_ID, O_CARRIER_I
+D, O_ENTRY_D FROM oorder
+ WHERE O_W_ID = $1 AND O
+_D_ID = $2 AND O_C_ID = 
+$3 ORDER BY O_ID DESC LI
+MIT $4"
+	"SELECT SUM(OL_AMOUNT) AS
+ OL_TOTAL FROM order_lin
+e WHERE OL_O_ID = $1 AND
+ OL_D_ID = $2 AND OL_W_I
+D = $3"
+	"INSERT INTO history (H_C
+_D_ID, H_C_W_ID, H_C_ID,
+ H_D_ID, H_W_ID, H_DATE,
+ H_AMOUNT, H_DATA) VALUE
+S ($1,$2,$3,$4,$5,$6,$7,
+$8)"
+	"SELECT S_QUANTITY, S_DAT
+A, S_DIST_01, S_DIST_02,
+ S_DIST_03, S_DIST_04, S
+_DIST_05, S_DIST_06, S_D
+IST_07, S_DIST_08, S_DIS
+T_09, S_DIST_10 FROM sto
+ck WHERE S_I_ID = $1 AND
+ S_W_ID = $2 FOR UPDATE"
+	"SELECT W_STREET_1, W_STR
+EET_2, W_CITY, W_STATE, 
+W_ZIP, W_NAME FROM wareh
+ouse WHERE W_ID = $1"
+	"SELECT W_TAX FROM wareho
+use WHERE W_ID = $1"
+	"SELECT version()"
+	"UPDATE customer SET C_BA
+LANCE = $1, C_YTD_PAYMEN
+T = $2, C_PAYMENT_CNT = 
+$3 WHERE C_W_ID = $4 AND
+ C_D_ID = $5 AND C_ID = 
+$6"
+	"UPDATE customer SET C_BA
+LANCE = $1, C_YTD_PAYMEN
+T = $2, C_PAYMENT_CNT = 
+$3, C_DATA = $4 WHERE C_
+W_ID = $5 AND C_D_ID = $
+6 AND C_ID = $7"
+	"UPDATE customer SET C_BA
+LANCE = C_BALANCE + $1, 
+C_DELIVERY_CNT = C_DELIV
+ERY_CNT + $2 WHERE C_W_I
+D = $3 AND C_D_ID = $4 A
+ND C_ID = $5"
+	"UPDATE district SET D_NE
+XT_O_ID = D_NEXT_O_ID + 
+$1 WHERE D_W_ID = $2 AND
+ D_ID = $3"
+	"UPDATE district SET D_YT
+D = D_YTD + $1 WHERE D_W
+_ID = $2 AND D_ID = $3"
+	"UPDATE oorder SET O_CARR
+IER_ID = $1 WHERE O_ID =
+ $2 AND O_D_ID = $3 AND 
+O_W_ID = $4"
+	"INSERT INTO new_order (N
+O_O_ID, NO_D_ID, NO_W_ID
+) VALUES ( $1, $2, $3)"
+	"UPDATE order_line SET OL
+_DELIVERY_D = $1 WHERE O
+L_O_ID = $2 AND OL_D_ID 
+= $3 AND OL_W_ID = $4"
+	"UPDATE stock SET S_QUANT
+ITY = $1 , S_YTD = S_YTD
+ + $2, S_ORDER_CNT = S_O
+RDER_CNT + $3, S_REMOTE_
+CNT = S_REMOTE_CNT + $4 
+WHERE S_I_ID = $5 AND S_
+W_ID = $6"
+	"UPDATE warehouse SET W_Y
+TD = W_YTD + $1 WHERE W_
+ID = $2"
+	"INSERT INTO oorder (O_ID
+, O_D_ID, O_W_ID, O_C_ID
+, O_ENTRY_D, O_OL_CNT, O
+_ALL_LOCAL) VALUES ($1, 
+$2, $3, $4, $5, $6, $7)"
+	"INSERT INTO order_line (
+OL_O_ID, OL_D_ID, OL_W_I
+D, OL_NUMBER, OL_I_ID, O
+L_SUPPLY_W_ID, OL_QUANTI
+TY, OL_AMOUNT, OL_DIST_I
+NFO) VALUES ($1,$2,$3,$4
+,$5,$6,$7,$8,$9)"
+	ROLLBACK
+	"SELECT * FROM pg_stat_ar
+chiver"
+	"SELECT * FROM pg_stat_bg
+writer"
+	BEGIN -> COMMIT [label=0.00 penwidth="9.489826905557247e-05"]
+	BEGIN -> "SELECT C_DISCOUNT, C_LAS
+T, C_CREDIT FROM custome
+r WHERE C_W_ID = $1 AND 
+C_D_ID = $2 AND C_ID = $
+3" [label=0.45 penwidth=1.1317567567567568]
+	BEGIN -> "SELECT C_FIRST, C_MIDDLE
+, C_ID, C_STREET_1, C_ST
+REET_2, C_CITY, C_STATE,
+ C_ZIP, C_PHONE, C_CREDI
+T, C_CREDIT_LIM, C_DISCO
+UNT, C_BALANCE, C_YTD_PA
+YMENT, C_PAYMENT_CNT, C_
+SINCE FROM customer WHER
+E C_W_ID = $1 AND C_D_ID
+ = $2 AND C_LAST = $3 OR
+DER BY C_FIRST" [label=0.02 penwidth=0.05836243546917705]
+	BEGIN -> "SELECT C_FIRST, C_MIDDLE
+, C_LAST, C_STREET_1, C_
+STREET_2, C_CITY, C_STAT
+E, C_ZIP, C_PHONE, C_CRE
+DIT, C_CREDIT_LIM, C_DIS
+COUNT, C_BALANCE, C_YTD_
+PAYMENT, C_PAYMENT_CNT, 
+C_SINCE FROM customer WH
+ERE C_W_ID = $1 AND C_D_
+ID = $2 AND C_ID = $3" [label=0.02 penwidth=0.039572578196173686]
+	BEGIN -> "SELECT D_NEXT_O_ID FROM 
+district WHERE D_W_ID = 
+$1 AND D_ID = $2" [label=0.04 penwidth=0.09869419981779534]
+	BEGIN -> "SELECT NO_O_ID FROM new_
+order WHERE NO_D_ID = $1
+ AND NO_W_ID = $2 ORDER 
+BY NO_O_ID ASC LIMIT $3" [label=0.04 penwidth=0.10011767385362891]
+	BEGIN -> "UPDATE warehouse SET W_Y
+TD = W_YTD + $1 WHERE W_
+ID = $2" [label=0.43 penwidth=1.0714014576374127]
+	"DELETE FROM new_order WH
+ERE NO_O_ID = $1 AND NO_
+D_ID = $2 AND NO_W_ID = 
+$3" -> "SELECT O_C_ID FROM oorde
+r WHERE O_ID = $1 AND O_
+D_ID = $2 AND O_W_ID = $
+3" [label=1.00 penwidth=2.5]
+	"INSERT INTO history (H_C
+_D_ID, H_C_W_ID, H_C_ID,
+ H_D_ID, H_W_ID, H_DATE,
+ H_AMOUNT, H_DATA) VALUE
+S ($1,$2,$3,$4,$5,$6,$7,
+$8)" -> COMMIT [label=1.00 penwidth=2.5]
+	"INSERT INTO new_order (N
+O_O_ID, NO_D_ID, NO_W_ID
+) VALUES ( $1, $2, $3)" -> "SELECT I_PRICE, I_NAME ,
+ I_DATA FROM item WHERE 
+I_ID = $1" [label=1.00 penwidth=2.5]
+	"INSERT INTO oorder (O_ID
+, O_D_ID, O_W_ID, O_C_ID
+, O_ENTRY_D, O_OL_CNT, O
+_ALL_LOCAL) VALUES ($1, 
+$2, $3, $4, $5, $6, $7)" -> "INSERT INTO new_order (N
+O_O_ID, NO_D_ID, NO_W_ID
+) VALUES ( $1, $2, $3)" [label=1.00 penwidth=2.5]
+	"INSERT INTO order_line (
+OL_O_ID, OL_D_ID, OL_W_I
+D, OL_NUMBER, OL_I_ID, O
+L_SUPPLY_W_ID, OL_QUANTI
+TY, OL_AMOUNT, OL_DIST_I
+NFO) VALUES ($1,$2,$3,$4
+,$5,$6,$7,$8,$9)" -> "INSERT INTO order_line (
+OL_O_ID, OL_D_ID, OL_W_I
+D, OL_NUMBER, OL_I_ID, O
+L_SUPPLY_W_ID, OL_QUANTI
+TY, OL_AMOUNT, OL_DIST_I
+NFO) VALUES ($1,$2,$3,$4
+,$5,$6,$7,$8,$9)" [label=0.90 penwidth=2.2505679946621173]
+	"INSERT INTO order_line (
+OL_O_ID, OL_D_ID, OL_W_I
+D, OL_NUMBER, OL_I_ID, O
+L_SUPPLY_W_ID, OL_QUANTI
+TY, OL_AMOUNT, OL_DIST_I
+NFO) VALUES ($1,$2,$3,$4
+,$5,$6,$7,$8,$9)" -> "UPDATE stock SET S_QUANT
+ITY = $1 , S_YTD = S_YTD
+ + $2, S_ORDER_CNT = S_O
+RDER_CNT + $3, S_REMOTE_
+CNT = S_REMOTE_CNT + $4 
+WHERE S_I_ID = $5 AND S_
+W_ID = $6" [label=0.10 penwidth=0.24943200533788293]
+	"SELECT * FROM pg_stat_ar
+chiver" -> "SELECT * FROM pg_stat_ar
+chiver" [label=1.00 penwidth=2.5]
+	"SELECT * FROM pg_stat_bg
+writer" -> "SELECT * FROM pg_stat_bg
+writer" [label=1.00 penwidth=2.5]
+	"SELECT * FROM pg_stat_da
+tabase" -> "SELECT * FROM pg_stat_da
+tabase" [label=1.00 penwidth=2.5]
+	"SELECT * FROM pg_stat_da
+tabase_conflicts" -> "SELECT * FROM pg_stat_da
+tabase_conflicts" [label=1.00 penwidth=2.5]
+	"SELECT * FROM pg_stat_us
+er_indexes" -> "SELECT * FROM pg_stat_us
+er_indexes" [label=1.00 penwidth=2.5]
+	"SELECT * FROM pg_stat_us
+er_tables" -> "SELECT * FROM pg_stat_us
+er_tables" [label=1.00 penwidth=2.5]
+	"SELECT * FROM pg_statio_
+user_indexes" -> "SELECT * FROM pg_statio_
+user_indexes" [label=1.00 penwidth=2.5]
+	"SELECT * FROM pg_statio_
+user_tables" -> "SELECT * FROM pg_statio_
+user_tables" [label=1.00 penwidth=2.5]
+	"SELECT COUNT(DISTINCT (S
+_I_ID)) AS STOCK_COUNT F
+ROM order_line, stock WH
+ERE OL_W_ID = $1 AND OL_
+D_ID = $2 AND OL_O_ID < 
+$3 AND OL_O_ID >= $4 AND
+ S_W_ID = $5 AND S_I_ID 
+= OL_I_ID AND S_QUANTITY
+ < $6" -> COMMIT [label=1.00 penwidth=2.5]
+	"SELECT C_DATA FROM custo
+mer WHERE C_W_ID = $1 AN
+D C_D_ID = $2 AND C_ID =
+ $3" -> "UPDATE customer SET C_BA
+LANCE = $1, C_YTD_PAYMEN
+T = $2, C_PAYMENT_CNT = 
+$3, C_DATA = $4 WHERE C_
+W_ID = $5 AND C_D_ID = $
+6 AND C_ID = $7" [label=1.00 penwidth=2.5]
+	"SELECT C_DISCOUNT, C_LAS
+T, C_CREDIT FROM custome
+r WHERE C_W_ID = $1 AND 
+C_D_ID = $2 AND C_ID = $
+3" -> "SELECT W_TAX FROM wareho
+use WHERE W_ID = $1" [label=1.00 penwidth=2.5]
+	"SELECT C_FIRST, C_MIDDLE
+, C_ID, C_STREET_1, C_ST
+REET_2, C_CITY, C_STATE,
+ C_ZIP, C_PHONE, C_CREDI
+T, C_CREDIT_LIM, C_DISCO
+UNT, C_BALANCE, C_YTD_PA
+YMENT, C_PAYMENT_CNT, C_
+SINCE FROM customer WHER
+E C_W_ID = $1 AND C_D_ID
+ = $2 AND C_LAST = $3 OR
+DER BY C_FIRST" -> "SELECT C_DATA FROM custo
+mer WHERE C_W_ID = $1 AN
+D C_D_ID = $2 AND C_ID =
+ $3" [label=0.09 penwidth=0.22608345632631155]
+	"SELECT C_FIRST, C_MIDDLE
+, C_ID, C_STREET_1, C_ST
+REET_2, C_CITY, C_STATE,
+ C_ZIP, C_PHONE, C_CREDI
+T, C_CREDIT_LIM, C_DISCO
+UNT, C_BALANCE, C_YTD_PA
+YMENT, C_PAYMENT_CNT, C_
+SINCE FROM customer WHER
+E C_W_ID = $1 AND C_D_ID
+ = $2 AND C_LAST = $3 OR
+DER BY C_FIRST" -> "SELECT O_ID, O_CARRIER_I
+D, O_ENTRY_D FROM oorder
+ WHERE O_W_ID = $1 AND O
+_D_ID = $2 AND O_C_ID = 
+$3 ORDER BY O_ID DESC LI
+MIT $4" [label=0.08 penwidth=0.20629276801288077]
+	"SELECT C_FIRST, C_MIDDLE
+, C_ID, C_STREET_1, C_ST
+REET_2, C_CITY, C_STATE,
+ C_ZIP, C_PHONE, C_CREDI
+T, C_CREDIT_LIM, C_DISCO
+UNT, C_BALANCE, C_YTD_PA
+YMENT, C_PAYMENT_CNT, C_
+SINCE FROM customer WHER
+E C_W_ID = $1 AND C_D_ID
+ = $2 AND C_LAST = $3 OR
+DER BY C_FIRST" -> "UPDATE customer SET C_BA
+LANCE = $1, C_YTD_PAYMEN
+T = $2, C_PAYMENT_CNT = 
+$3 WHERE C_W_ID = $4 AND
+ C_D_ID = $5 AND C_ID = 
+$6" [label=0.83 penwidth=2.067623775660808]
+	"SELECT C_FIRST, C_MIDDLE
+, C_LAST, C_STREET_1, C_
+STREET_2, C_CITY, C_STAT
+E, C_ZIP, C_PHONE, C_CRE
+DIT, C_CREDIT_LIM, C_DIS
+COUNT, C_BALANCE, C_YTD_
+PAYMENT, C_PAYMENT_CNT, 
+C_SINCE FROM customer WH
+ERE C_W_ID = $1 AND C_D_
+ID = $2 AND C_ID = $3" -> "SELECT C_DATA FROM custo
+mer WHERE C_W_ID = $1 AN
+D C_D_ID = $2 AND C_ID =
+ $3" [label=0.09 penwidth=0.23054015198192646]
+	"SELECT C_FIRST, C_MIDDLE
+, C_LAST, C_STREET_1, C_
+STREET_2, C_CITY, C_STAT
+E, C_ZIP, C_PHONE, C_CRE
+DIT, C_CREDIT_LIM, C_DIS
+COUNT, C_BALANCE, C_YTD_
+PAYMENT, C_PAYMENT_CNT, 
+C_SINCE FROM customer WH
+ERE C_W_ID = $1 AND C_D_
+ID = $2 AND C_ID = $3" -> "SELECT O_ID, O_CARRIER_I
+D, O_ENTRY_D FROM oorder
+ WHERE O_W_ID = $1 AND O
+_D_ID = $2 AND O_C_ID = 
+$3 ORDER BY O_ID DESC LI
+MIT $4" [label=0.09 penwidth=0.21410967344423903]
+	"SELECT C_FIRST, C_MIDDLE
+, C_LAST, C_STREET_1, C_
+STREET_2, C_CITY, C_STAT
+E, C_ZIP, C_PHONE, C_CRE
+DIT, C_CREDIT_LIM, C_DIS
+COUNT, C_BALANCE, C_YTD_
+PAYMENT, C_PAYMENT_CNT, 
+C_SINCE FROM customer WH
+ERE C_W_ID = $1 AND C_D_
+ID = $2 AND C_ID = $3" -> "UPDATE customer SET C_BA
+LANCE = $1, C_YTD_PAYMEN
+T = $2, C_PAYMENT_CNT = 
+$3 WHERE C_W_ID = $4 AND
+ C_D_ID = $5 AND C_ID = 
+$6" [label=0.82 penwidth=2.0553501745738343]
+	"SELECT D_NEXT_O_ID FROM 
+district WHERE D_W_ID = 
+$1 AND D_ID = $2" -> "SELECT COUNT(DISTINCT (S
+_I_ID)) AS STOCK_COUNT F
+ROM order_line, stock WH
+ERE OL_W_ID = $1 AND OL_
+D_ID = $2 AND OL_O_ID < 
+$3 AND OL_O_ID >= $4 AND
+ S_W_ID = $5 AND S_I_ID 
+= OL_I_ID AND S_QUANTITY
+ < $6" [label=1.00 penwidth=2.5]
+	"SELECT D_NEXT_O_ID, D_TA
+X FROM district WHERE D_
+W_ID = $1 AND D_ID = $2 
+FOR UPDATE" -> "UPDATE district SET D_NE
+XT_O_ID = D_NEXT_O_ID + 
+$1 WHERE D_W_ID = $2 AND
+ D_ID = $3" [label=1.00 penwidth=2.5]
+	"SELECT D_STREET_1, D_STR
+EET_2, D_CITY, D_STATE, 
+D_ZIP, D_NAME FROM distr
+ict WHERE D_W_ID = $1 AN
+D D_ID = $2" -> "SELECT C_FIRST, C_MIDDLE
+, C_ID, C_STREET_1, C_ST
+REET_2, C_CITY, C_STATE,
+ C_ZIP, C_PHONE, C_CREDI
+T, C_CREDIT_LIM, C_DISCO
+UNT, C_BALANCE, C_YTD_PA
+YMENT, C_PAYMENT_CNT, C_
+SINCE FROM customer WHER
+E C_W_ID = $1 AND C_D_ID
+ = $2 AND C_LAST = $3 OR
+DER BY C_FIRST" [label=0.61 penwidth=1.5141718334809564]
+	"SELECT D_STREET_1, D_STR
+EET_2, D_CITY, D_STATE, 
+D_ZIP, D_NAME FROM distr
+ict WHERE D_W_ID = $1 AN
+D D_ID = $2" -> "SELECT C_FIRST, C_MIDDLE
+, C_LAST, C_STREET_1, C_
+STREET_2, C_CITY, C_STAT
+E, C_ZIP, C_PHONE, C_CRE
+DIT, C_CREDIT_LIM, C_DIS
+COUNT, C_BALANCE, C_YTD_
+PAYMENT, C_PAYMENT_CNT, 
+C_SINCE FROM customer WH
+ERE C_W_ID = $1 AND C_D_
+ID = $2 AND C_ID = $3" [label=0.39 penwidth=0.9858281665190434]
+	"SELECT I_PRICE, I_NAME ,
+ I_DATA FROM item WHERE 
+I_ID = $1" -> ROLLBACK [label=0.00 penwidth=0.0023834014902531426]
+	"SELECT I_PRICE, I_NAME ,
+ I_DATA FROM item WHERE 
+I_ID = $1" -> "SELECT S_QUANTITY, S_DAT
+A, S_DIST_01, S_DIST_02,
+ S_DIST_03, S_DIST_04, S
+_DIST_05, S_DIST_06, S_D
+IST_07, S_DIST_08, S_DIS
+T_09, S_DIST_10 FROM sto
+ck WHERE S_I_ID = $1 AND
+ S_W_ID = $2 FOR UPDATE" [label=1.00 penwidth=2.497616598509747]
+	"SELECT NO_O_ID FROM new_
+order WHERE NO_D_ID = $1
+ AND NO_W_ID = $2 ORDER 
+BY NO_O_ID ASC LIMIT $3" -> "DELETE FROM new_order WH
+ERE NO_O_ID = $1 AND NO_
+D_ID = $2 AND NO_W_ID = 
+$3" [label=1.00 penwidth=2.5]
+	"SELECT OL_I_ID, OL_SUPPL
+Y_W_ID, OL_QUANTITY, OL_
+AMOUNT, OL_DELIVERY_D FR
+OM order_line WHERE OL_O
+_ID = $1 AND OL_D_ID = $
+2 AND OL_W_ID = $3" -> COMMIT [label=1.00 penwidth=2.5]
+	"SELECT O_C_ID FROM oorde
+r WHERE O_ID = $1 AND O_
+D_ID = $2 AND O_W_ID = $
+3" -> "UPDATE oorder SET O_CARR
+IER_ID = $1 WHERE O_ID =
+ $2 AND O_D_ID = $3 AND 
+O_W_ID = $4" [label=1.00 penwidth=2.5]
+	"SELECT O_ID, O_CARRIER_I
+D, O_ENTRY_D FROM oorder
+ WHERE O_W_ID = $1 AND O
+_D_ID = $2 AND O_C_ID = 
+$3 ORDER BY O_ID DESC LI
+MIT $4" -> "SELECT OL_I_ID, OL_SUPPL
+Y_W_ID, OL_QUANTITY, OL_
+AMOUNT, OL_DELIVERY_D FR
+OM order_line WHERE OL_O
+_ID = $1 AND OL_D_ID = $
+2 AND OL_W_ID = $3" [label=1.00 penwidth=2.5]
+	"SELECT SUM(OL_AMOUNT) AS
+ OL_TOTAL FROM order_lin
+e WHERE OL_O_ID = $1 AND
+ OL_D_ID = $2 AND OL_W_I
+D = $3" -> "UPDATE customer SET C_BA
+LANCE = C_BALANCE + $1, 
+C_DELIVERY_CNT = C_DELIV
+ERY_CNT + $2 WHERE C_W_I
+D = $3 AND C_D_ID = $4 A
+ND C_ID = $5" [label=1.00 penwidth=2.5]
+	"SELECT S_QUANTITY, S_DAT
+A, S_DIST_01, S_DIST_02,
+ S_DIST_03, S_DIST_04, S
+_DIST_05, S_DIST_06, S_D
+IST_07, S_DIST_08, S_DIS
+T_09, S_DIST_10 FROM sto
+ck WHERE S_I_ID = $1 AND
+ S_W_ID = $2 FOR UPDATE" -> "INSERT INTO order_line (
+OL_O_ID, OL_D_ID, OL_W_I
+D, OL_NUMBER, OL_I_ID, O
+L_SUPPLY_W_ID, OL_QUANTI
+TY, OL_AMOUNT, OL_DIST_I
+NFO) VALUES ($1,$2,$3,$4
+,$5,$6,$7,$8,$9)" [label=0.10 penwidth=0.2472104333559345]
+	"SELECT S_QUANTITY, S_DAT
+A, S_DIST_01, S_DIST_02,
+ S_DIST_03, S_DIST_04, S
+_DIST_05, S_DIST_06, S_D
+IST_07, S_DIST_08, S_DIS
+T_09, S_DIST_10 FROM sto
+ck WHERE S_I_ID = $1 AND
+ S_W_ID = $2 FOR UPDATE" -> "SELECT I_PRICE, I_NAME ,
+ I_DATA FROM item WHERE 
+I_ID = $1" [label=0.90 penwidth=2.252789566644066]
+	"SELECT W_STREET_1, W_STR
+EET_2, W_CITY, W_STATE, 
+W_ZIP, W_NAME FROM wareh
+ouse WHERE W_ID = $1" -> "UPDATE district SET D_YT
+D = D_YTD + $1 WHERE D_W
+_ID = $2 AND D_ID = $3" [label=1.00 penwidth=2.5]
+	"SELECT W_TAX FROM wareho
+use WHERE W_ID = $1" -> "SELECT D_NEXT_O_ID, D_TA
+X FROM district WHERE D_
+W_ID = $1 AND D_ID = $2 
+FOR UPDATE" [label=1.00 penwidth=2.5]
+	"SELECT version()" -> "SELECT version()" [label=1.00 penwidth=2.5]
+	"UPDATE customer SET C_BA
+LANCE = $1, C_YTD_PAYMEN
+T = $2, C_PAYMENT_CNT = 
+$3 WHERE C_W_ID = $4 AND
+ C_D_ID = $5 AND C_ID = 
+$6" -> "INSERT INTO history (H_C
+_D_ID, H_C_W_ID, H_C_ID,
+ H_D_ID, H_W_ID, H_DATE,
+ H_AMOUNT, H_DATA) VALUE
+S ($1,$2,$3,$4,$5,$6,$7,
+$8)" [label=1.00 penwidth=2.5]
+	"UPDATE customer SET C_BA
+LANCE = $1, C_YTD_PAYMEN
+T = $2, C_PAYMENT_CNT = 
+$3, C_DATA = $4 WHERE C_
+W_ID = $5 AND C_D_ID = $
+6 AND C_ID = $7" -> "INSERT INTO history (H_C
+_D_ID, H_C_W_ID, H_C_ID,
+ H_D_ID, H_W_ID, H_DATE,
+ H_AMOUNT, H_DATA) VALUE
+S ($1,$2,$3,$4,$5,$6,$7,
+$8)" [label=1.00 penwidth=2.5]
+	"UPDATE customer SET C_BA
+LANCE = C_BALANCE + $1, 
+C_DELIVERY_CNT = C_DELIV
+ERY_CNT + $2 WHERE C_W_I
+D = $3 AND C_D_ID = $4 A
+ND C_ID = $5" -> COMMIT [label=0.10 penwidth=0.25000000000000006]
+	"UPDATE customer SET C_BA
+LANCE = C_BALANCE + $1, 
+C_DELIVERY_CNT = C_DELIV
+ERY_CNT + $2 WHERE C_W_I
+D = $3 AND C_D_ID = $4 A
+ND C_ID = $5" -> "SELECT NO_O_ID FROM new_
+order WHERE NO_D_ID = $1
+ AND NO_W_ID = $2 ORDER 
+BY NO_O_ID ASC LIMIT $3" [label=0.90 penwidth=2.25]
+	"UPDATE district SET D_NE
+XT_O_ID = D_NEXT_O_ID + 
+$1 WHERE D_W_ID = $2 AND
+ D_ID = $3" -> "INSERT INTO oorder (O_ID
+, O_D_ID, O_W_ID, O_C_ID
+, O_ENTRY_D, O_OL_CNT, O
+_ALL_LOCAL) VALUES ($1, 
+$2, $3, $4, $5, $6, $7)" [label=1.00 penwidth=2.5]
+	"UPDATE district SET D_YT
+D = D_YTD + $1 WHERE D_W
+_ID = $2 AND D_ID = $3" -> "SELECT D_STREET_1, D_STR
+EET_2, D_CITY, D_STATE, 
+D_ZIP, D_NAME FROM distr
+ict WHERE D_W_ID = $1 AN
+D D_ID = $2" [label=1.00 penwidth=2.5]
+	"UPDATE oorder SET O_CARR
+IER_ID = $1 WHERE O_ID =
+ $2 AND O_D_ID = $3 AND 
+O_W_ID = $4" -> "UPDATE order_line SET OL
+_DELIVERY_D = $1 WHERE O
+L_O_ID = $2 AND OL_D_ID 
+= $3 AND OL_W_ID = $4" [label=1.00 penwidth=2.5]
+	"UPDATE order_line SET OL
+_DELIVERY_D = $1 WHERE O
+L_O_ID = $2 AND OL_D_ID 
+= $3 AND OL_W_ID = $4" -> "SELECT SUM(OL_AMOUNT) AS
+ OL_TOTAL FROM order_lin
+e WHERE OL_O_ID = $1 AND
+ OL_D_ID = $2 AND OL_W_I
+D = $3" [label=1.00 penwidth=2.5]
+	"UPDATE stock SET S_QUANT
+ITY = $1 , S_YTD = S_YTD
+ + $2, S_ORDER_CNT = S_O
+RDER_CNT + $3, S_REMOTE_
+CNT = S_REMOTE_CNT + $4 
+WHERE S_I_ID = $5 AND S_
+W_ID = $6" -> COMMIT [label=0.10 penwidth=0.24943200533788293]
+	"UPDATE stock SET S_QUANT
+ITY = $1 , S_YTD = S_YTD
+ + $2, S_ORDER_CNT = S_O
+RDER_CNT + $3, S_REMOTE_
+CNT = S_REMOTE_CNT + $4 
+WHERE S_I_ID = $5 AND S_
+W_ID = $6" -> "UPDATE stock SET S_QUANT
+ITY = $1 , S_YTD = S_YTD
+ + $2, S_ORDER_CNT = S_O
+RDER_CNT + $3, S_REMOTE_
+CNT = S_REMOTE_CNT + $4 
+WHERE S_I_ID = $5 AND S_
+W_ID = $6" [label=0.90 penwidth=2.2505679946621173]
+	"UPDATE warehouse SET W_Y
+TD = W_YTD + $1 WHERE W_
+ID = $2" -> "SELECT W_STREET_1, W_STR
+EET_2, W_CITY, W_STATE, 
+W_ZIP, W_NAME FROM wareh
+ouse WHERE W_ID = $1" [label=1.00 penwidth=2.5]
+}
