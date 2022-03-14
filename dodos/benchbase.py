@@ -70,7 +70,9 @@ def task_benchbase_build():
             # Compile BenchBase.
             "./mvnw clean package -Dmaven.test.skip=true -P postgres",
             lambda: os.chdir("target"),
+            "mv benchbase-2021-SNAPSHOT.tgz benchbase-postgres.tgz",  # P1 HACK
             "tar xvzf benchbase-postgres.tgz",
+            "mv benchbase-2021-SNAPSHOT benchbase-postgres",  # P1 HACK
             # Move artifacts out.
             lambda: os.chdir(doit.get_initial_workdir()),
             f"mv {BUILD_PATH / f'target/benchbase-postgres/*'} {ARTIFACTS_PATH}",
