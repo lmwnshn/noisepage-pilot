@@ -157,6 +157,7 @@ class Preprocessor:
             parse_dates=["log_time", "session_start_time"],
             usecols=[
                 "log_time",
+                "session_id",
                 "session_line_num",
                 "session_start_time",
                 "command_tag",
@@ -274,13 +275,21 @@ class Preprocessor:
             # This necessitates the use of a SQL-aware substitution,
             # even if this is much slower than naive string substitution.
             new_sql, last_end = [], 0
-            for token in pglast.parser.scan(query):
+            try:
+                tokens = pglast.parser.scan(query)
+            except pglast.parser.ParseError:
+                print(f"Bad query: {query}")
+                return ""
+            for token in tokens:
                 token_str = str(query[token.start : token.end + 1])
                 if token.start > last_end:
                     new_sql.append(" ")
                 if token.name == "PARAM":
                     assert token_str.startswith("$")
                     assert token_str[1:].isdigit()
+                    if token_str not in params:
+                        print(f"Bad query param: {query} {params}")
+                        return ""
                     new_sql.append(params[token_str])
                 else:
                     new_sql.append(token_str)
@@ -381,6 +390,7 @@ class Preprocessor:
             "log_time",
             "query_template",
             "query_params",
+            "session_id",
             "session_line_num",
             "virtual_transaction_id",
             "transaction_id",
